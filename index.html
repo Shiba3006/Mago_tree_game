@@ -36,7 +36,7 @@ button:focus-visible{outline:4px solid #fff;outline-offset:3px}
 
 /* ---------- guide bubble (Lulu) ---------- */
 .guide{display:flex;align-items:center;gap:10px;margin:0 12px 8px;padding:10px 14px;background:var(--paper);
-  border-radius:22px 22px 22px 6px;box-shadow:0 4px 0 rgba(0,0,0,.25);cursor:pointer;min-height:64px}
+  border-radius:22px 22px 22px 6px;box-shadow:0 4px 0 rgba(0,0,0,.25);min-height:64px}
 .guide .who{font-size:34px;flex:none;animation:bob 2.4s ease-in-out infinite}
 .guide p{font-size:clamp(16px,4.3vw,21px);font-weight:700;line-height:1.45}
 @keyframes bob{50%{transform:translateY(-4px) rotate(-4deg)}}
@@ -46,6 +46,9 @@ button:focus-visible{outline:4px solid #fff;outline-offset:3px}
   color:var(--ink);box-shadow:0 6px 0 var(--mango2);transition:transform .1s}
 .big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--mango2)}
 .big.green{background:#7ED36A;box-shadow:0 6px 0 #3F8F3A}
+a.big{display:inline-block;text-decoration:none}
+.big.blue{background:#6CC4EA;box-shadow:0 6px 0 #2E86B0}
+.big.blue:active{box-shadow:0 2px 0 #2E86B0}
 .big.ghost{background:rgba(255,255,255,.9);box-shadow:0 6px 0 rgba(0,0,0,.25)}
 
 /* ---------- start ---------- */
@@ -146,36 +149,24 @@ button:focus-visible{outline:4px solid #fff;outline-offset:3px}
 .modal p{font-size:clamp(17px,4.6vw,21px);font-weight:600;line-height:1.55;margin:8px 0 16px}
 @keyframes flap{to{transform:scaleY(.85) translateY(-4px)}}
 
-/* ---------- stage 3: plant ---------- */
+/* ---------- stage 3: night guard ---------- */
 #s3{background:var(--night)}
-#scene3{background:linear-gradient(#F7B267,#F4845F 45%,#C9A36B 70%)}
-#scene3.alive{background:linear-gradient(#8FD3FE,#C7ECFF 55%,#9ED08A 72%)}
-.hill{position:absolute;bottom:18%;width:70%;height:40%;border-radius:50% 50% 0 0;background:#A57548;transition:background 1.5s}
-.alive .hill{background:#5FAF5A}
-.valley{position:absolute;left:0;right:0;bottom:0;height:30%;background:linear-gradient(var(--dry),#9A6E43);transition:background 1.5s}
-.alive .valley{background:linear-gradient(#7CC96A,#4E9A45)}
-.crack{position:absolute;height:3px;background:#7A5230;border-radius:3px;opacity:.7}
-.river{position:absolute;bottom:2%;right:0;height:9%;width:0;background:repeating-linear-gradient(90deg,var(--river) 0 30px,#6CC4EA 30px 60px);
-  border-radius:30px 0 0 30px;transition:width 2s ease-out;z-index:3}
-.alive .river{width:100%;animation:flow 1.2s linear infinite}
-@keyframes flow{to{background-position:60px 0}}
-.spot{position:absolute;top:74%;width:14vmin;height:6vmin;transform:translate(-50%,-50%);border-radius:50%;
-  border:3px dashed #6E4A28;background:#A47A4C66;z-index:2}
-.spot .tree{position:absolute;left:50%;bottom:30%;transform:translateX(-50%) scale(0);transform-origin:bottom center;
-  font-size:clamp(34px,11vmin,64px);line-height:1;transition:transform .7s cubic-bezier(.3,1.6,.5,1)}
-.spot.planted{border-color:transparent;background:#5A8F3A55}
-.spot.planted .tree{transform:translateX(-50%) scale(1)}
-.bat{position:absolute;top:18%;font-size:clamp(46px,14vmin,80px);transform:translate(-50%,-50%);z-index:4;
-  transition:left .35s ease-out}
-.bat.patrol{transition:none}
-.bat span{display:block;animation:flap .25s ease-in-out infinite alternate}
-.seed{position:absolute;width:3vmin;height:2vmin;min-width:12px;min-height:8px;border-radius:50%;background:#5B3A1E;
-  border:2px solid #E8D59A;transform:translate(-50%,-50%);z-index:3;transition:top .8s ease-in,left .8s ease-in,opacity .4s}
+#scene3{background:linear-gradient(#0E1834,#1C2E55 70%,#243D5E)}
+.treeline{position:absolute;left:0;right:0;bottom:0;height:24%;z-index:1;
+  background:radial-gradient(circle at 8% 100%,#0D2418 34%,transparent 35%),radial-gradient(circle at 30% 100%,#0F2A1C 40%,transparent 41%),
+  radial-gradient(circle at 55% 100%,#0D2418 30%,transparent 31%),radial-gradient(circle at 78% 100%,#0F2A1C 42%,transparent 43%),
+  radial-gradient(circle at 98% 100%,#0D2418 34%,transparent 35%)}
+.basket{position:absolute;bottom:4%;left:50%;transform:translateX(-50%);font-size:clamp(40px,12vmin,68px);z-index:2;transition:transform .2s}
+.basket.bump{transform:translateX(-50%) scale(1.2)}
+.flyer{position:absolute;left:0;top:0;background:none;padding:8px;z-index:3;line-height:1;touch-action:none}
+.flyer span{display:block;font-size:var(--fs,56px);animation:flap .28s ease-in-out infinite alternate}
+.flyer.flip span{transform:scaleX(-1)}
+.flyer.fed{pointer-events:none;transition:opacity .6s}
+.flyer.fed::after{content:"🥭";position:absolute;bottom:-4px;right:-4px;font-size:calc(var(--fs,56px)*.5)}
+.flyer.shake span{animation:shake .45s}
 .counter{position:absolute;top:10px;left:10px;z-index:5;background:var(--paper);border-radius:999px;padding:4px 14px;
   font-size:20px;font-weight:800}
-.tap-hint{position:absolute;bottom:40%;left:50%;transform:translateX(-50%);font-size:44px;z-index:5;pointer-events:none;
-  animation:tapit 1.2s ease-in-out infinite}
-@keyframes tapit{50%{transform:translateX(-50%) scale(.8)}}
+.plus{position:absolute;z-index:6;font-size:28px;font-weight:800;color:#FFD66B;pointer-events:none;transition:all .7s ease-out}
 
 /* ---------- end ---------- */
 #end{align-items:center;justify-content:center;text-align:center;gap:16px;padding:20px;
@@ -205,23 +196,24 @@ button:focus-visible{outline:4px solid #fff;outline-offset:3px}
   <section class="screen on" id="start">
     <div class="hero-lens" aria-hidden="true"><span>🥭</span></div>
     <h1>المحقق نوح</h1>
-    <h2>لغز المانجو المختفية</h2>
-    <p>المانجو تختفي من الشجرة كل ليلة! ساعد نوح ولؤلؤة في كشف السر.</p>
+    <h2>لغز المانجو اللي بتختفي</h2>
+    <p>المانجو بتختفي من الشجرة كل ليلة! ساعد نوح ولؤلؤة يكشفوا السر.</p>
     <div class="age">
-      <button class="big" data-level="young">ابدأ<small>٥ – ٧ سنوات</small></button>
-      <button class="big green" data-level="old">ابدأ<small>٨ – ١٠ سنوات</small></button>
+      <button class="big" data-level="young">يلا نلعب<small>من ٥ لـ ٧ سنين</small></button>
+      <button class="big green" data-level="old">يلا نلعب<small>من ٨ لـ ١٠ سنين</small></button>
     </div>
+    <a class="big blue" href="runner.html">🏃 العب مع نوح</a>
   </section>
 
   <!-- ===== shared top bar (hidden on start/end) ===== -->
   <div class="bar hidden" id="bar">
-    <div class="steps" aria-label="المراحل"><span id="st1">🔍</span><span id="st2">🤔</span><span id="st3">🌱</span></div>
+    <div class="steps" aria-label="المراحل"><span id="st1">🔍</span><span id="st2">🤔</span><span id="st3">🌙</span></div>
     <button class="iconbtn" id="mute" aria-label="الصوت">🔊</button>
   </div>
 
   <!-- ===== STAGE 1: magnifier ===== -->
   <section class="screen" id="s1">
-    <div class="guide" data-say><span class="who">🦜</span><p id="g1"></p></div>
+    <div class="guide"><span class="who">🦜</span><p id="g1"></p></div>
     <div class="scene" id="scene1">
       <div class="moon"></div>
       <div class="canopy" style="left:22%;top:6%;width:36%;height:30%"></div>
@@ -244,30 +236,24 @@ button:focus-visible{outline:4px solid #fff;outline-offset:3px}
       <div class="hint-hand" id="hand" aria-hidden="true">👆</div>
     </div>
     <div class="notebook" id="notebook"></div>
-    <div class="next-row hidden" id="next1"><button class="big green">هيا نفكّر</button></div>
+    <div class="next-row hidden" id="next1"><button class="big green">يلا نفكّر</button></div>
   </section>
 
   <!-- ===== STAGE 2: who ate the mango ===== -->
   <section class="screen" id="s2">
-    <div class="guide" data-say><span class="who">🦜</span><p id="g2"></p></div>
+    <div class="guide"><span class="who">🦜</span><p id="g2"></p></div>
     <div class="cluecard"><div class="n" id="clueN"></div><div class="t" id="clueT"></div></div>
     <div class="suspects" id="suspects"></div>
   </section>
 
-  <!-- ===== STAGE 3: plant the jungle ===== -->
+  <!-- ===== STAGE 3: night guard ===== -->
   <section class="screen" id="s3">
-    <div class="guide" data-say><span class="who">🦜</span><p id="g3"></p></div>
+    <div class="guide"><span class="who">🦜</span><p id="g3"></p></div>
     <div class="scene" id="scene3" style="margin-bottom:12px">
-      <div class="hill" style="left:-15%"></div>
-      <div class="hill" style="left:45%;height:30%"></div>
-      <div class="valley"></div>
-      <div class="crack" style="left:10%;bottom:14%;width:18%;transform:rotate(8deg)"></div>
-      <div class="crack" style="left:48%;bottom:8%;width:22%;transform:rotate(-6deg)"></div>
-      <div class="crack" style="left:74%;bottom:18%;width:14%;transform:rotate(12deg)"></div>
-      <div class="river"></div>
+      <div class="moon"></div>
+      <div class="treeline"></div>
+      <div class="basket" id="basket">🧺</div>
       <div class="counter" id="counter"></div>
-      <div class="bat" id="bat"><span>🦇</span></div>
-      <div class="tap-hint" id="tapHint" aria-hidden="true">👆</div>
     </div>
   </section>
 
@@ -275,13 +261,13 @@ button:focus-visible{outline:4px solid #fff;outline-offset:3px}
   <section class="screen" id="end">
     <div class="party" aria-hidden="true"><span>🐘</span><span>🦒</span><span>🐒</span><span>🦥</span><span>🦜</span><span>🦇</span></div>
     <div class="card">
-      <h2>أحسنت يا محقق!</h2>
-      <p>قالت لؤلؤة: «حجر الإصغاء حجر عادي… السحر الحقيقي أنك أصغيت للجميع».</p>
-      <p class="lesson">المحقق الذكي لا يتسرّع، ويجمع الأدلة أولًا.</p>
+      <h2>برافو يا محقق!</h2>
+      <p>لؤلؤة قالت: «حجر الإصغاء ده حجر عادي… السحر الحقيقي إنك سمعت الكل».</p>
+      <p class="lesson">المحقق الشاطر مابيستعجلش، وبيجمع الأدلة الأول.</p>
     </div>
     <div class="row">
-      <button class="big" id="again">العب مرة أخرى</button>
-      <button class="big ghost" id="home">اختر العمر</button>
+      <button class="big" id="again">العب تاني</button>
+      <button class="big ghost" id="home">اختار السن</button>
     </div>
   </section>
 </div>
@@ -299,31 +285,33 @@ const $$ = s => [...document.querySelectorAll(s)];
 const ar = n => n.toLocaleString("ar-EG");
 
 /* =========================================================
-   TEXT: edit all Arabic wording here
+   TEXT: all Arabic wording lives here (Egyptian colloquial)
    ========================================================= */
 const T = {
-  s1: "حرّك العدسة بإصبعك وابحث عن ٥ أدلة تحت الشجرة!",
-  s1done: "وجدت كل الأدلة! المحقق الذكي لا يتسرّع… هيا نفكّر: من أكل المانجو؟",
+  s1: "حرّك العدسة بصباعك ودوّر على ٥ أدلة تحت الشجرة!",
+  s1done: "لقيت كل الأدلة! المحقق الشاطر مابيستعجلش… يلا نفكّر: مين اللي أكل المانجو؟",
   clues: {
-    peel:   { short: "قشر",  say: "قشر مانجو مأكول من الأعلى!" },
-    seeds:  { short: "بذور", say: "بذور مبعثرة حول الشجرة!" },
-    prints: { short: "آثار", say: "آثار أقدام كبيرة… لكنها بعيدة عن الشجرة!" },
-    holes:  { short: "ثقوب", say: "ثقوب صغيرة في الثمار، كأن أحدًا عضّها!" },
-    hair:   { short: "شعر",  say: "شعرات سوداء قصيرة على الغصن!" }
+    peel:   { short: "قشر",  say: "قشر مانجو متاكل من فوق!" },
+    seeds:  { short: "بذور", say: "بذور مرمية حوالين الشجرة!" },
+    prints: { short: "آثار", say: "آثار رجلين كبيرة… بس بعيد عن الشجرة!" },
+    holes:  { short: "خروم", say: "خروم صغيرة في المانجو، كأن حد عضّها!" },
+    hair:   { short: "شعر",  say: "شعر أسود قصير على الغصن!" }
   },
-  s2young: "اقرأ الدليل، ثم المس الحيوان الذي ليس هو السارق.",
-  s2old: "اقرأ الدليل، ثم المس كل حيوان لا يناسبه.",
-  wrongBat: "مهلًا! المحقق الذكي لا يتسرّع. اقرأ الدليل مرة أخرى.",
-  wrongOther: "هذا الحيوان لا يخالف الدليل. فكّر مرة أخرى!",
-  lastOne: "بقي حيوان واحد فقط… من أكل المانجو؟ المسه!",
-  batTitle: "إنه الخفاش!",
-  batText: "قال الخفاش بخجل: «لسنا لصوصًا! وادينا جفّ ولم تعد تنبت فيه ثمار. نحن نطير ليلًا وننثر بذور الأشجار».",
-  batBtn: "هيا نساعد الخفافيش",
-  s3young: "المس الوادي ليطير الخفاش ويُسقط البذور. ازرع ٦ أشجار!",
-  s3old: "الخفاش يطير وحده. المس الشاشة في الوقت المناسب لتسقط البذرة فوق الدائرة!",
-  miss: "قريب! حاول مرة أخرى.",
-  s3done: "نبع الماء وعادت الأشجار! شكرًا يا نوح.",
-  end: "أحسنت يا محقق! حجر الإصغاء حجر عادي، والسحر الحقيقي أنك أصغيت للجميع."
+  clueN: (i, n) => `دليل رقم ${ar(i)} من ${ar(n)}`,
+  s2young: "اقرا الدليل، وبعدين دوس على الحيوان اللي مش هو الحرامي.",
+  s2old: "اقرا الدليل، ودوس على كل حيوان مايناسبوش.",
+  wrongBat: "استنى! المحقق الشاطر مابيستعجلش. اقرا الدليل تاني.",
+  wrongOther: "الحيوان ده مش بيخالف الدليل. فكّر تاني!",
+  lastOne: "فاضل حيوان واحد بس… مين اللي أكل المانجو؟ دوس عليه!",
+  batTitle: "طلع الخفاش!",
+  batText: "الخفاش قال بكسوف: «إحنا مش حرامية! الوادي بتاعنا نشف ومابقاش فيه فاكهة. إحنا بنطير بالليل وبنرمي بذور الشجر في كل حتة».",
+  batBtn: "يلا نساعد الخفافيش",
+  s3young: "الخفافيش جايين ياكلوا! دوس على كل خفاش عشان تديله مانجاية. خلّي بالك من البومة والفراشات!",
+  s3old: "الخفافيش جايين بسرعة! دوس على الخفافيش بس، وخلّي بالك من البومة والفراشات!",
+  wrongOwl: "دي البومة! مش خفاش.",
+  wrongBird: "دي فراشة! دوّر على الخفافيش.",
+  fedMsg: ["شاطر!", "كمان واحد!", "برافو!", "هايل!"],
+  s3done: "كل الخفافيش شبعت! وفي المقابل هيزرعوا بذور في الأدغال كلها."
 };
 
 const SUSPECTS = [
@@ -335,36 +323,21 @@ const SUSPECTS = [
 ];
 const CLUES2 = {
   young: [
-    { t: "زيزي الزرافة تأكل أوراق الشجر بلسانها، ولا تعضّ الثمار.", out: ["giraffe"] },
-    { t: "فيفي الفيلة كانت تشرب عند النهر، وآثار أقدامها بعيدة عن الشجرة.", out: ["elephant"] },
-    { t: "الثمار بعيدة عن الفروع التي يمسكها كوكو القرد.", out: ["monkey"] },
-    { t: "السارق يطير ليلًا تحت القمر… والكسلان لا يطير!", out: ["sloth"] }
+    { t: "زيزي الزرافة بتاكل ورق الشجر بلسانها، ومابتعضّش المانجو.", out: ["giraffe"] },
+    { t: "فيفي الفيلة كانت بتشرب عند النهر، وآثار رجليها بعيدة عن الشجرة.", out: ["elephant"] },
+    { t: "المانجو بعيدة عن الفروع اللي كوكو القرد بيمسك فيها.", out: ["monkey"] },
+    { t: "الحرامي بيطير بالليل تحت القمر… والكسلان مابيطيرش!", out: ["sloth"] }
   ],
   old: [
-    { t: "لا توجد آثار أقدام تحت الشجرة. استبعد الحيوانات الكبيرة التي تمشي على الأرض.", out: ["elephant", "giraffe"] },
-    { t: "الشعرات التي وجدناها سوداء وقصيرة. من شعره بنّي؟", out: ["monkey", "sloth"] }
+    { t: "مافيش آثار رجلين تحت الشجرة. شيل الحيوانات الكبيرة اللي بتمشي على الأرض.", out: ["elephant", "giraffe"] },
+    { t: "الشعر اللي لقيناه أسود وقصير. مين شعره بني؟", out: ["monkey", "sloth"] }
   ]
 };
 
 /* =========================================================
-   SOUND: tiny beeps + Arabic speech (only if an Arabic voice exists)
+   SOUND: short beeps only (no voice-over)
    ========================================================= */
-let soundOn = true, actx = null, arVoice = null;
-const pickVoice = () => {
-  if (!("speechSynthesis" in window)) return;
-  const vs = speechSynthesis.getVoices();
-  arVoice = vs.find(v => /^ar[-_]EG/i.test(v.lang)) || vs.find(v => /^ar/i.test(v.lang)) || null;
-};
-if ("speechSynthesis" in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
-function speak(t) {
-  if (!soundOn || !arVoice) return;
-  try {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(t);
-    u.voice = arVoice; u.lang = arVoice.lang; u.rate = 0.9; u.pitch = 1.1;
-    speechSynthesis.speak(u);
-  } catch (e) {}
-}
+let soundOn = true, actx = null;
 function tone(freqs, dur = 0.12, type = "sine") {
   if (!soundOn) return;
   try {
@@ -381,15 +354,11 @@ const sfx = {
   found: () => tone([660, 880, 1175], 0.09),
   wrong: () => tone([220, 180], 0.14, "triangle"),
   out:   () => tone([520, 390], 0.08, "square"),
-  plant: () => tone([392, 587], 0.08),
+  feed:  () => tone([587, 784], 0.08),
   win:   () => tone([523, 659, 784, 1047], 0.13)
 };
-$("#mute").onclick = () => {
-  soundOn = !soundOn; $("#mute").textContent = soundOn ? "🔊" : "🔈";
-  if (!soundOn && "speechSynthesis" in window) speechSynthesis.cancel();
-};
-function say(el, text) { el.textContent = text; speak(text); }
-$$("[data-say]").forEach(g => g.onclick = () => speak(g.querySelector("p").textContent));
+$("#mute").onclick = () => { soundOn = !soundOn; $("#mute").textContent = soundOn ? "🔊" : "🔈"; };
+function say(el, text) { el.textContent = text; }
 
 /* =========================================================
    FLOW
@@ -400,12 +369,13 @@ function show(id) {
   $("#bar").classList.toggle("hidden", id === "start" || id === "end");
   const n = { s1: 1, s2: 2, s3: 3 }[id] || 0;
   [1, 2, 3].forEach(i => { const e = $("#st" + i); e.className = i < n ? "done" : i === n ? "now" : ""; });
+  if (id !== "s3") stopStage3();
 }
 $$("[data-level]").forEach(b => b.onclick = () => { level = b.dataset.level; startStage1(); });
 $("#again").onclick = () => startStage1();
 $("#home").onclick = () => show("start");
 
-/* ---------- STAGE 1 ---------- */
+/* ---------- STAGE 1: magnifier ---------- */
 const scene1 = $("#scene1"), dark = $("#dark"), lens = $("#lens");
 let lensX = 0, lensY = 0, lensR = 60, found1 = new Set(), s1Active = false;
 const clueEls = $$("#scene1 .clue");
@@ -451,6 +421,7 @@ function startStage1() {
   clueEls.forEach(c => c.classList.remove("found"));
   $("#notebook").innerHTML = clueEls.map(c => `<div class="slot" data-id="${c.dataset.id}">؟</div>`).join("");
   $("#next1").classList.add("hidden"); $("#notebook").classList.remove("hidden");
+  dark.style.opacity = "";
   const hand = $("#hand"); hand.classList.remove("hidden"); hand.style.left = "55%"; hand.style.top = "58%";
   requestAnimationFrame(() => {
     const r = scene1.getBoundingClientRect();
@@ -466,9 +437,9 @@ function finishStage1() {
     $("#notebook").classList.add("hidden"); $("#next1").classList.remove("hidden");
   }, 900);
 }
-$("#next1 button").onclick = () => { dark.style.opacity = ""; startStage2(); };
+$("#next1 button").onclick = () => startStage2();
 
-/* ---------- STAGE 2 ---------- */
+/* ---------- STAGE 2: who ate the mango ---------- */
 let clueIdx = 0, outSet = new Set(), s2Lock = false;
 function startStage2() {
   show("s2"); clueIdx = 0; outSet.clear(); s2Lock = false;
@@ -486,10 +457,9 @@ function showClue() {
     say($("#g2"), T.lastOne);
     return;
   }
-  $("#clueN").textContent = `الدليل ${ar(clueIdx + 1)} من ${ar(list.length)}`;
+  $("#clueN").textContent = T.clueN(clueIdx + 1, list.length);
   $("#clueT").textContent = list[clueIdx].t;
-  $("#g2").textContent = level === "young" ? T.s2young : T.s2old;
-  speak(list[clueIdx].t + " " + $("#g2").textContent);
+  say($("#g2"), level === "young" ? T.s2young : T.s2old);
 }
 function tapSuspect(b) {
   const id = b.dataset.id, list = clues();
@@ -510,80 +480,100 @@ function revealBat() {
 }
 function openModal(emo, title, text, btn, next) {
   $("#mEmo").textContent = emo; $("#mTitle").textContent = title; $("#mText").textContent = text; $("#mBtn").textContent = btn;
-  $("#modal").classList.remove("hidden"); speak(title + ". " + text);
+  $("#modal").classList.remove("hidden");
   $("#mBtn").onclick = () => { $("#modal").classList.add("hidden"); next(); };
   setTimeout(() => $("#mBtn").focus(), 50);
 }
 
-/* ---------- STAGE 3 ---------- */
-const scene3 = $("#scene3"), bat = $("#bat");
-const SPOTS = [12, 28, 44, 60, 76, 90];
-let spots = [], batX = 50, planted = 0, patrolRAF = 0, s3Active = false;
+/* ---------- STAGE 3: night guard ---------- */
+const scene3 = $("#scene3");
+const S3 = {
+  young: { goal: 8,  spawnMs: 1150, speed: [70, 110],  batChance: 0.7,  size: 0.13 },
+  old:   { goal: 12, spawnMs: 750,  speed: [120, 190], batChance: 0.55, size: 0.10 }
+};
+const KINDS = { bat: "🦇", owl: "🦉", bird: "🦋" };
+let flyers = [], fed = 0, s3Raf = 0, s3Active = false, lastSpawn = 0, lastT = 0, W = 0, H = 0;
+
 function startStage3() {
-  show("s3"); scene3.classList.remove("alive"); planted = 0; s3Active = true;
-  $$("#scene3 .spot, #scene3 .seed").forEach(e => e.remove());
-  spots = SPOTS.map(x => {
-    const el = document.createElement("div"); el.className = "spot"; el.style.left = x + "%";
-    el.innerHTML = '<span class="tree">🌳</span>'; scene3.appendChild(el);
-    return { x, el, state: "empty" };
-  });
-  updateCounter(); $("#tapHint").classList.remove("hidden");
-  batX = 50; bat.style.left = "50%";
-  if (level === "old") { bat.classList.add("patrol"); startPatrol(); } else bat.classList.remove("patrol");
-  say($("#g3"), level === "young" ? T.s3young : T.s3old);
-}
-function updateCounter() { $("#counter").textContent = `🌳 ${ar(planted)} / ${ar(SPOTS.length)}`; }
-function startPatrol() {
-  cancelAnimationFrame(patrolRAF);
-  const t0 = performance.now();
-  const step = t => {
-    batX = 50 + 40 * Math.sin((t - t0) / 1100);
-    bat.style.left = batX + "%";
-    if (s3Active) patrolRAF = requestAnimationFrame(step);
-  };
-  patrolRAF = requestAnimationFrame(step);
-}
-scene3.addEventListener("pointerdown", e => {
-  if (!s3Active) return;
-  $("#tapHint").classList.add("hidden");
-  const r = scene3.getBoundingClientRect();
-  if (level === "young") {
-    batX = Math.max(8, Math.min(92, (e.clientX - r.left) / r.width * 100));
-    bat.style.left = batX + "%";
-    setTimeout(() => dropSeed(batX), 330);
-  } else dropSeed(batX);
-});
-function dropSeed(x) {
-  const empty = spots.filter(s => s.state === "empty");
-  if (!empty.length) return;
-  const near = empty.reduce((a, b) => Math.abs(b.x - x) < Math.abs(a.x - x) ? b : a);
-  const hit = level === "young" || Math.abs(near.x - x) < 7;
-  if (hit) near.state = "pending";
-  const seed = document.createElement("div"); seed.className = "seed";
-  seed.style.left = x + "%"; seed.style.top = "24%"; scene3.appendChild(seed);
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    seed.style.left = (hit ? near.x : x) + "%"; seed.style.top = hit ? "72%" : "80%";
-  }));
-  setTimeout(() => {
-    if (hit) { seed.remove(); plant(near); }
-    else { seed.style.opacity = "0"; sfx.wrong(); say($("#g3"), T.miss); setTimeout(() => seed.remove(), 450); }
-  }, 850);
-}
-function plant(s) {
-  s.state = "planted"; s.el.classList.add("planted"); planted++; sfx.plant(); updateCounter();
-  if (planted === SPOTS.length) {
-    s3Active = false; cancelAnimationFrame(patrolRAF);
-    setTimeout(() => { scene3.classList.add("alive"); sfx.win(); say($("#g3"), T.s3done); }, 500);
-    setTimeout(showEnd, 3400);
+  show("s3"); stopStage3();
+  $$("#scene3 .flyer, #scene3 .fly, #scene3 .plus").forEach(e => e.remove());
+  for (let i = 0; i < 9; i++) {
+    const f = document.createElement("div"); f.className = "fly";
+    f.style.left = Math.random() * 95 + "%"; f.style.top = 15 + Math.random() * 65 + "%";
+    f.style.animationDelay = Math.random() * 2.5 + "s"; scene3.appendChild(f);
   }
+  flyers = []; fed = 0; s3Active = true; lastSpawn = 0; lastT = 0;
+  updateCounter();
+  say($("#g3"), level === "young" ? T.s3young : T.s3old);
+  s3Raf = requestAnimationFrame(loop3);
+}
+function stopStage3() { s3Active = false; cancelAnimationFrame(s3Raf); }
+function updateCounter() { $("#counter").textContent = `🦇 ${ar(fed)} / ${ar(S3[level].goal)}`; }
+
+function spawn() {
+  const cfg = S3[level];
+  const kind = Math.random() < cfg.batChance ? "bat" : (Math.random() < 0.5 ? "owl" : "bird");
+  const fs = Math.max(40, Math.min(W, H) * cfg.size);
+  const fromLeft = Math.random() < 0.5;
+  const el = document.createElement("button");
+  el.className = "flyer"; el.setAttribute("aria-label", kind === "bat" ? "خفاش" : kind === "owl" ? "بومة" : "فراشة");
+  el.style.setProperty("--fs", fs + "px");
+  el.innerHTML = `<span>${KINDS[kind]}</span>`;
+  scene3.appendChild(el);
+  const speed = cfg.speed[0] + Math.random() * (cfg.speed[1] - cfg.speed[0]);
+  const f = { el, kind, x: fromLeft ? -fs - 20 : W + 20, y0: H * (0.08 + Math.random() * 0.55),
+              vx: fromLeft ? speed : -speed, ph: Math.random() * 6, done: false };
+  el.addEventListener("pointerdown", e => { e.stopPropagation(); tapFlyer(f); });
+  flyers.push(f);
+}
+function tapFlyer(f) {
+  if (!s3Active || f.done) return;
+  if (f.kind === "bat") {
+    f.done = true; f.el.classList.add("fed"); fed++; sfx.feed(); updateCounter();
+    f.vx *= 2.2; f.rise = true;
+    const b = $("#basket"); b.classList.add("bump"); setTimeout(() => b.classList.remove("bump"), 200);
+    plus(f);
+    say($("#g3"), T.fedMsg[fed % T.fedMsg.length]);
+    if (fed >= S3[level].goal) finishStage3();
+  } else {
+    sfx.wrong(); f.el.classList.remove("shake"); void f.el.offsetWidth; f.el.classList.add("shake");
+    say($("#g3"), f.kind === "owl" ? T.wrongOwl : T.wrongBird);
+  }
+}
+function plus(f) {
+  const p = document.createElement("div"); p.className = "plus"; p.textContent = "+١";
+  p.style.left = f.x + "px"; p.style.top = f.y + "px"; scene3.appendChild(p);
+  requestAnimationFrame(() => { p.style.transform = "translateY(-40px)"; p.style.opacity = "0"; });
+  setTimeout(() => p.remove(), 750);
+}
+function loop3(t) {
+  const r = scene3.getBoundingClientRect(); W = r.width; H = r.height;
+  const dt = lastT ? Math.min(0.05, (t - lastT) / 1000) : 0; lastT = t;
+  if (s3Active && t - lastSpawn > S3[level].spawnMs) { spawn(); lastSpawn = t; }
+  flyers = flyers.filter(f => {
+    f.x += f.vx * dt;
+    if (f.rise) f.y0 -= 90 * dt;
+    f.y = f.y0 + Math.sin(t / 300 + f.ph) * 14;
+    f.el.style.transform = `translate(${f.x}px, ${f.y}px)`;
+    const gone = f.x < -200 || f.x > W + 200 || f.y < -150;
+    if (gone) f.el.remove();
+    return !gone;
+  });
+  if (s3Active || flyers.length) s3Raf = requestAnimationFrame(loop3);
+}
+function finishStage3() {
+  s3Active = false;
+  flyers.forEach(f => { if (!f.done) { f.el.style.transition = "opacity .5s"; f.el.style.opacity = "0"; } });
+  setTimeout(() => { sfx.win(); say($("#g3"), T.s3done); }, 400);
+  setTimeout(showEnd, 3000);
 }
 
 /* ---------- END ---------- */
 function showEnd() {
-  show("end"); speak(T.end);
+  show("end");
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
     for (let i = 0; i < 18; i++) {
-      const m = document.createElement("div"); m.className = "fall"; m.textContent = i % 3 ? "🥭" : "🌱";
+      const m = document.createElement("div"); m.className = "fall"; m.textContent = i % 3 ? "🥭" : "🦇";
       m.style.left = Math.random() * 95 + "vw"; m.style.animationDuration = 2.5 + Math.random() * 2.5 + "s";
       m.style.animationDelay = Math.random() * 1.5 + "s"; document.body.appendChild(m);
       setTimeout(() => m.remove(), 7000);
