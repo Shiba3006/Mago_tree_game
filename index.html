@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#14213D">
+<title>المحقق نوح: لغز المانجو</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#14213D; --night2:#1E3257; --leaf:#2F6B3A; --leaf2:#4C9A4F;
+  --mango:#FFB627; --mango2:#F07F1B; --paper:#FFF4D6; --ink:#2A2118;
+  --bark:#6B4226; --river:#3FA7D6; --dry:#B98A5A; --red:#D9433B;
+  --font:"Baloo Bhaijaan 2","Segoe UI",Tahoma,"Noto Sans Arabic",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--night);color:var(--ink);font-family:var(--font);overflow:hidden;
+  user-select:none;-webkit-user-select:none;overscroll-behavior:none}
+#app{height:100vh;height:100dvh;display:flex;flex-direction:column;
+  padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0)}
+button{font-family:inherit;cursor:pointer;border:0}
+button:focus-visible{outline:4px solid #fff;outline-offset:3px}
+.screen{flex:1;min-height:0;display:none;flex-direction:column}
+.screen.on{display:flex}
+
+/* ---------- top bar ---------- */
+.bar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;gap:8px}
+.steps{display:flex;gap:6px}
+.steps span{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:20px;
+  background:rgba(255,255,255,.12);filter:grayscale(1);opacity:.55;transition:.3s}
+.steps span.now{background:var(--mango);filter:none;opacity:1;transform:scale(1.1)}
+.steps span.done{background:var(--leaf2);filter:none;opacity:1}
+.iconbtn{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.15);font-size:22px;color:#fff}
+
+/* ---------- guide bubble (Lulu) ---------- */
+.guide{display:flex;align-items:center;gap:10px;margin:0 12px 8px;padding:10px 14px;background:var(--paper);
+  border-radius:22px 22px 22px 6px;box-shadow:0 4px 0 rgba(0,0,0,.25);cursor:pointer;min-height:64px}
+.guide .who{font-size:34px;flex:none;animation:bob 2.4s ease-in-out infinite}
+.guide p{font-size:clamp(16px,4.3vw,21px);font-weight:700;line-height:1.45}
+@keyframes bob{50%{transform:translateY(-4px) rotate(-4deg)}}
+
+/* ---------- big buttons ---------- */
+.big{font-size:clamp(19px,5vw,24px);font-weight:800;padding:12px 28px;border-radius:999px;background:var(--mango);
+  color:var(--ink);box-shadow:0 6px 0 var(--mango2);transition:transform .1s}
+.big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--mango2)}
+.big.green{background:#7ED36A;box-shadow:0 6px 0 #3F8F3A}
+.big.ghost{background:rgba(255,255,255,.9);box-shadow:0 6px 0 rgba(0,0,0,.25)}
+
+/* ---------- start ---------- */
+#start{align-items:center;justify-content:center;text-align:center;gap:18px;padding:20px;color:#fff;
+  background:radial-gradient(circle at 70% 18%,#2B4478 0,var(--night) 60%)}
+.hero-lens{position:relative;width:min(46vw,210px);aspect-ratio:1;border-radius:50%;
+  border:12px solid #E8B64C;background:radial-gradient(circle at 35% 30%,#5DA85A,#1F4D2A);
+  display:grid;place-items:center;font-size:min(22vw,100px);box-shadow:0 0 60px rgba(255,200,80,.35)}
+.hero-lens::after{content:"";position:absolute;width:18%;height:48%;background:var(--bark);border-radius:12px;
+  bottom:-40%;left:-4%;transform:rotate(40deg);z-index:-1}
+.hero-lens span{animation:wobble 3s ease-in-out infinite}
+@keyframes wobble{50%{transform:rotate(12deg) scale(1.05)}}
+#start h1{font-size:clamp(38px,11vw,62px);line-height:1.05;color:var(--mango);text-shadow:0 5px 0 #0008;margin-top:28px}
+#start h2{font-size:clamp(20px,5.5vw,28px);font-weight:700;margin-top:-6px}
+#start p{font-size:clamp(17px,4.5vw,21px);max-width:26ch;line-height:1.5;opacity:.92}
+.age{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.age small{display:block;font-size:.7em;font-weight:500}
+
+/* ---------- stage 1: magnifier ---------- */
+#s1{background:var(--night)}
+.scene{position:relative;flex:1;min-height:0;margin:0 12px;border-radius:24px;overflow:hidden;touch-action:none}
+#scene1{background:linear-gradient(#1C2E55,#243D5E 55%,#20402F 74%)}
+.moon{position:absolute;top:7%;left:12%;width:13vmin;height:13vmin;border-radius:50%;background:#FFF3C4;box-shadow:0 0 40px #FFF3C4aa}
+.trunk{position:absolute;left:50%;bottom:20%;width:12%;height:46%;transform:translateX(-50%);
+  background:linear-gradient(90deg,#4E2F1A,var(--bark) 45%,#4E2F1A);border-radius:40% 40% 10% 10%}
+.canopy{position:absolute;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--leaf2),var(--leaf))}
+.branch{position:absolute;left:14%;top:37%;width:38%;height:3.2%;background:var(--bark);border-radius:8px;transform:rotate(-9deg)}
+.ground{position:absolute;left:0;right:0;bottom:0;height:24%;background:linear-gradient(#3A4A26,#2A3419)}
+.fly{position:absolute;width:6px;height:6px;border-radius:50%;background:#FFF59A;box-shadow:0 0 10px 3px #FFF59A99;
+  animation:blink 2.8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:.2;transform:translate(0,0)}50%{opacity:1;transform:translate(8px,-10px)}}
+.deco{position:absolute;font-size:clamp(20px,6vmin,38px);transform:translate(-50%,-50%)}
+.clue{position:absolute;transform:translate(-50%,-50%);z-index:2;pointer-events:none}
+.clue.found{z-index:5;filter:drop-shadow(0 0 10px #FFD66B) drop-shadow(0 0 4px #FFD66B);animation:pop .5s}
+.clue.found::after{content:"✔";position:absolute;top:-16px;right:-16px;width:26px;height:26px;border-radius:50%;
+  background:#7ED36A;color:#fff;font-size:15px;display:grid;place-items:center;font-weight:800}
+@keyframes pop{40%{transform:translate(-50%,-50%) scale(1.45)}}
+.emo{font-size:clamp(24px,7vmin,42px);display:block;line-height:1}
+.c-peel{position:relative}.c-peel .bite{position:absolute;top:-4px;left:40%;width:55%;height:45%;border-radius:50%;background:#34421F}
+.c-peel .emo{transform:rotate(80deg)}
+.c-seeds{width:14vmin;height:8vmin;position:relative}
+.c-seeds i{position:absolute;width:2.4vmin;height:1.5vmin;border-radius:50%;background:#E8D59A}
+.c-seeds i:nth-child(1){left:5%;top:20%}.c-seeds i:nth-child(2){left:35%;top:55%;transform:rotate(30deg)}
+.c-seeds i:nth-child(3){left:60%;top:10%}.c-seeds i:nth-child(4){left:80%;top:60%;transform:rotate(-20deg)}
+.c-seeds i:nth-child(5){left:48%;top:30%}
+.c-prints{display:flex;gap:2vmin;align-items:flex-end}
+.c-prints i{width:5.5vmin;height:4.5vmin;border-radius:50%;background:#1A2012;box-shadow:inset 0 0 0 3px #57643B}
+.c-prints i:nth-child(2){margin-bottom:3vmin}
+.c-holes{position:relative}
+.c-holes i{position:absolute;width:1.6vmin;height:1.6vmin;border-radius:50%;background:#3A2410}
+.c-holes i:nth-of-type(1){top:30%;left:30%}.c-holes i:nth-of-type(2){top:52%;left:50%}.c-holes i:nth-of-type(3){top:40%;left:62%}
+.c-hair{display:flex;gap:1.2vmin}
+.c-hair i{width:.7vmin;min-width:3px;height:4vmin;background:#050505;border-radius:3px;transform:rotate(18deg)}
+.c-hair i:nth-child(even){transform:rotate(-14deg);height:3vmin}
+.dark{position:absolute;inset:0;background:rgba(6,11,28,.95);z-index:4;pointer-events:none}
+.lens{position:absolute;z-index:6;pointer-events:none;border-radius:50%;border:7px solid #E8B64C;
+  box-shadow:0 0 0 3px #0006,inset 0 0 30px rgba(255,255,255,.25);transform:translate(-50%,-50%)}
+.lens::after{content:"";position:absolute;width:16%;height:55%;background:var(--bark);border-radius:10px;
+  top:92%;left:-4%;transform:rotate(38deg);transform-origin:top center}
+.hint-hand{position:absolute;z-index:7;font-size:42px;pointer-events:none;animation:drag 2.2s ease-in-out infinite}
+@keyframes drag{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,-30px)}}
+.notebook{display:flex;gap:6px;justify-content:center;margin:10px 12px 12px;padding:8px;background:var(--paper);
+  border-radius:16px;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.slot{flex:1;max-width:84px;height:52px;border:3px dashed #C9B58A;border-radius:12px;display:grid;place-items:center;
+  font-size:clamp(14px,3.8vw,18px);font-weight:800;color:#B7A274;transition:.3s}
+.slot.got{border-style:solid;border-color:var(--leaf2);background:#E7F6DD;color:var(--leaf)}
+.next-row{display:flex;justify-content:center;padding:0 12px 14px}
+.hidden{display:none!important}
+
+/* ---------- stage 2: suspects ---------- */
+#s2{background:linear-gradient(#244A33,#173524)}
+.cluecard{margin:0 12px;padding:14px 16px;background:var(--paper);border-radius:18px;position:relative;
+  box-shadow:0 4px 0 rgba(0,0,0,.25);border-inline-start:10px solid var(--mango)}
+.cluecard .n{font-size:15px;font-weight:700;color:#8A7550}
+.cluecard .t{font-size:clamp(18px,5vw,24px);font-weight:800;line-height:1.45;margin-top:2px}
+.cluecard .how{font-size:clamp(14px,3.8vw,17px);font-weight:500;margin-top:4px;color:#5A4A33}
+.suspects{flex:1;min-height:0;display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:12px;padding:14px}
+.sus{width:clamp(96px,28vw,150px);aspect-ratio:.82;border-radius:22px;background:var(--paper);position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 6px 0 rgba(0,0,0,.3);transition:.25s}
+.sus .emo{font-size:clamp(44px,13vw,70px)}
+.sus b{font-size:clamp(14px,3.8vw,18px);font-weight:800}
+.sus.out{filter:grayscale(1);opacity:.5;transform:scale(.92)}
+.sus.out::after{content:"✖";position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(60px,18vw,100px);
+  color:var(--red);opacity:.85;animation:stamp .3s}
+@keyframes stamp{from{transform:scale(2);opacity:0}}
+.sus.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.sus.last{box-shadow:0 0 0 6px var(--mango),0 6px 0 rgba(0,0,0,.3);animation:glow 1.2s ease-in-out infinite}
+@keyframes glow{50%{transform:scale(1.07)}}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;background:rgba(10,16,30,.75);display:grid;place-items:center;z-index:50;padding:20px}
+.modal .card{background:var(--paper);border-radius:26px;padding:22px 20px;max-width:430px;text-align:center;
+  box-shadow:0 8px 0 rgba(0,0,0,.3);animation:pop2 .4s}
+@keyframes pop2{from{transform:scale(.7);opacity:0}}
+.modal .emo{font-size:84px;margin-bottom:6px;animation:flap .5s ease-in-out infinite alternate}
+.modal h3{font-size:clamp(24px,6.5vw,30px);font-weight:800;color:var(--leaf)}
+.modal p{font-size:clamp(17px,4.6vw,21px);font-weight:600;line-height:1.55;margin:8px 0 16px}
+@keyframes flap{to{transform:scaleY(.85) translateY(-4px)}}
+
+/* ---------- stage 3: plant ---------- */
+#s3{background:var(--night)}
+#scene3{background:linear-gradient(#F7B267,#F4845F 45%,#C9A36B 70%)}
+#scene3.alive{background:linear-gradient(#8FD3FE,#C7ECFF 55%,#9ED08A 72%)}
+.hill{position:absolute;bottom:18%;width:70%;height:40%;border-radius:50% 50% 0 0;background:#A57548;transition:background 1.5s}
+.alive .hill{background:#5FAF5A}
+.valley{position:absolute;left:0;right:0;bottom:0;height:30%;background:linear-gradient(var(--dry),#9A6E43);transition:background 1.5s}
+.alive .valley{background:linear-gradient(#7CC96A,#4E9A45)}
+.crack{position:absolute;height:3px;background:#7A5230;border-radius:3px;opacity:.7}
+.river{position:absolute;bottom:2%;right:0;height:9%;width:0;background:repeating-linear-gradient(90deg,var(--river) 0 30px,#6CC4EA 30px 60px);
+  border-radius:30px 0 0 30px;transition:width 2s ease-out;z-index:3}
+.alive .river{width:100%;animation:flow 1.2s linear infinite}
+@keyframes flow{to{background-position:60px 0}}
+.spot{position:absolute;top:74%;width:14vmin;height:6vmin;transform:translate(-50%,-50%);border-radius:50%;
+  border:3px dashed #6E4A28;background:#A47A4C66;z-index:2}
+.spot .tree{position:absolute;left:50%;bottom:30%;transform:translateX(-50%) scale(0);transform-origin:bottom center;
+  font-size:clamp(34px,11vmin,64px);line-height:1;transition:transform .7s cubic-bezier(.3,1.6,.5,1)}
+.spot.planted{border-color:transparent;background:#5A8F3A55}
+.spot.planted .tree{transform:translateX(-50%) scale(1)}
+.bat{position:absolute;top:18%;font-size:clamp(46px,14vmin,80px);transform:translate(-50%,-50%);z-index:4;
+  transition:left .35s ease-out}
+.bat.patrol{transition:none}
+.bat span{display:block;animation:flap .25s ease-in-out infinite alternate}
+.seed{position:absolute;width:3vmin;height:2vmin;min-width:12px;min-height:8px;border-radius:50%;background:#5B3A1E;
+  border:2px solid #E8D59A;transform:translate(-50%,-50%);z-index:3;transition:top .8s ease-in,left .8s ease-in,opacity .4s}
+.counter{position:absolute;top:10px;left:10px;z-index:5;background:var(--paper);border-radius:999px;padding:4px 14px;
+  font-size:20px;font-weight:800}
+.tap-hint{position:absolute;bottom:40%;left:50%;transform:translateX(-50%);font-size:44px;z-index:5;pointer-events:none;
+  animation:tapit 1.2s ease-in-out infinite}
+@keyframes tapit{50%{transform:translateX(-50%) scale(.8)}}
+
+/* ---------- end ---------- */
+#end{align-items:center;justify-content:center;text-align:center;gap:16px;padding:20px;
+  background:linear-gradient(#8FD3FE,#C7ECFF 45%,#7CC96A 46%,#4E9A45)}
+.party{display:flex;gap:4px;font-size:clamp(38px,11vw,62px);flex-wrap:wrap;justify-content:center}
+.party span{animation:jump 1s ease-in-out infinite}
+.party span:nth-child(2){animation-delay:.12s}.party span:nth-child(3){animation-delay:.24s}
+.party span:nth-child(4){animation-delay:.36s}.party span:nth-child(5){animation-delay:.48s}.party span:nth-child(6){animation-delay:.6s}
+@keyframes jump{50%{transform:translateY(-16px)}}
+#end .card{background:var(--paper);border-radius:26px;padding:20px;max-width:440px;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+#end h2{font-size:clamp(28px,8vw,40px);color:var(--leaf);font-weight:800}
+#end p{font-size:clamp(17px,4.6vw,21px);font-weight:600;line-height:1.55;margin-top:6px}
+#end .lesson{margin-top:10px;padding-top:10px;border-top:3px dashed #D8C49A;color:var(--bark);font-weight:800}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.fall{position:fixed;top:-60px;font-size:34px;z-index:40;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(115vh) rotate(360deg)}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== START ===== -->
+  <section class="screen on" id="start">
+    <div class="hero-lens" aria-hidden="true"><span>🥭</span></div>
+    <h1>المحقق نوح</h1>
+    <h2>لغز المانجو المختفية</h2>
+    <p>المانجو تختفي من الشجرة كل ليلة! ساعد نوح ولؤلؤة في كشف السر.</p>
+    <div class="age">
+      <button class="big" data-level="young">ابدأ<small>٥ – ٧ سنوات</small></button>
+      <button class="big green" data-level="old">ابدأ<small>٨ – ١٠ سنوات</small></button>
+    </div>
+  </section>
+
+  <!-- ===== shared top bar (hidden on start/end) ===== -->
+  <div class="bar hidden" id="bar">
+    <div class="steps" aria-label="المراحل"><span id="st1">🔍</span><span id="st2">🤔</span><span id="st3">🌱</span></div>
+    <button class="iconbtn" id="mute" aria-label="الصوت">🔊</button>
+  </div>
+
+  <!-- ===== STAGE 1: magnifier ===== -->
+  <section class="screen" id="s1">
+    <div class="guide" data-say><span class="who">🦜</span><p id="g1"></p></div>
+    <div class="scene" id="scene1">
+      <div class="moon"></div>
+      <div class="canopy" style="left:22%;top:6%;width:36%;height:30%"></div>
+      <div class="canopy" style="left:42%;top:2%;width:40%;height:34%"></div>
+      <div class="canopy" style="left:30%;top:18%;width:44%;height:26%"></div>
+      <div class="trunk"></div>
+      <div class="branch"></div>
+      <div class="ground"></div>
+      <span class="deco" style="left:44%;top:22%">🥭</span>
+      <span class="deco" style="left:74%;top:14%">🥭</span>
+
+      <div class="clue" data-id="hair"  style="left:27%;top:33%"><div class="c-hair"><i></i><i></i><i></i><i></i></div></div>
+      <div class="clue" data-id="holes" style="left:63%;top:28%"><div class="c-holes"><span class="emo">🥭</span><i></i><i></i><i></i></div></div>
+      <div class="clue" data-id="peel"  style="left:36%;top:84%"><div class="c-peel"><span class="emo">🥭</span><i class="bite"></i></div></div>
+      <div class="clue" data-id="seeds" style="left:62%;top:88%"><div class="c-seeds"><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="clue" data-id="prints" style="left:12%;top:90%"><div class="c-prints"><i></i><i></i><i></i></div></div>
+
+      <div class="dark" id="dark"></div>
+      <div class="lens" id="lens"></div>
+      <div class="hint-hand" id="hand" aria-hidden="true">👆</div>
+    </div>
+    <div class="notebook" id="notebook"></div>
+    <div class="next-row hidden" id="next1"><button class="big green">هيا نفكّر</button></div>
+  </section>
+
+  <!-- ===== STAGE 2: who ate the mango ===== -->
+  <section class="screen" id="s2">
+    <div class="guide" data-say><span class="who">🦜</span><p id="g2"></p></div>
+    <div class="cluecard"><div class="n" id="clueN"></div><div class="t" id="clueT"></div></div>
+    <div class="suspects" id="suspects"></div>
+  </section>
+
+  <!-- ===== STAGE 3: plant the jungle ===== -->
+  <section class="screen" id="s3">
+    <div class="guide" data-say><span class="who">🦜</span><p id="g3"></p></div>
+    <div class="scene" id="scene3" style="margin-bottom:12px">
+      <div class="hill" style="left:-15%"></div>
+      <div class="hill" style="left:45%;height:30%"></div>
+      <div class="valley"></div>
+      <div class="crack" style="left:10%;bottom:14%;width:18%;transform:rotate(8deg)"></div>
+      <div class="crack" style="left:48%;bottom:8%;width:22%;transform:rotate(-6deg)"></div>
+      <div class="crack" style="left:74%;bottom:18%;width:14%;transform:rotate(12deg)"></div>
+      <div class="river"></div>
+      <div class="counter" id="counter"></div>
+      <div class="bat" id="bat"><span>🦇</span></div>
+      <div class="tap-hint" id="tapHint" aria-hidden="true">👆</div>
+    </div>
+  </section>
+
+  <!-- ===== END ===== -->
+  <section class="screen" id="end">
+    <div class="party" aria-hidden="true"><span>🐘</span><span>🦒</span><span>🐒</span><span>🦥</span><span>🦜</span><span>🦇</span></div>
+    <div class="card">
+      <h2>أحسنت يا محقق!</h2>
+      <p>قالت لؤلؤة: «حجر الإصغاء حجر عادي… السحر الحقيقي أنك أصغيت للجميع».</p>
+      <p class="lesson">المحقق الذكي لا يتسرّع، ويجمع الأدلة أولًا.</p>
+    </div>
+    <div class="row">
+      <button class="big" id="again">العب مرة أخرى</button>
+      <button class="big ghost" id="home">اختر العمر</button>
+    </div>
+  </section>
+</div>
+
+<div class="modal hidden" id="modal"><div class="card">
+  <div class="emo" id="mEmo"></div><h3 id="mTitle"></h3><p id="mText"></p>
+  <button class="big green" id="mBtn"></button>
+</div></div>
+
+<script>
+(() => {
+"use strict";
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const ar = n => n.toLocaleString("ar-EG");
+
+/* =========================================================
+   TEXT: edit all Arabic wording here
+   ========================================================= */
+const T = {
+  s1: "حرّك العدسة بإصبعك وابحث عن ٥ أدلة تحت الشجرة!",
+  s1done: "وجدت كل الأدلة! المحقق الذكي لا يتسرّع… هيا نفكّر: من أكل المانجو؟",
+  clues: {
+    peel:   { short: "قشر",  say: "قشر مانجو مأكول من الأعلى!" },
+    seeds:  { short: "بذور", say: "بذور مبعثرة حول الشجرة!" },
+    prints: { short: "آثار", say: "آثار أقدام كبيرة… لكنها بعيدة عن الشجرة!" },
+    holes:  { short: "ثقوب", say: "ثقوب صغيرة في الثمار، كأن أحدًا عضّها!" },
+    hair:   { short: "شعر",  say: "شعرات سوداء قصيرة على الغصن!" }
+  },
+  s2young: "اقرأ الدليل، ثم المس الحيوان الذي ليس هو السارق.",
+  s2old: "اقرأ الدليل، ثم المس كل حيوان لا يناسبه.",
+  wrongBat: "مهلًا! المحقق الذكي لا يتسرّع. اقرأ الدليل مرة أخرى.",
+  wrongOther: "هذا الحيوان لا يخالف الدليل. فكّر مرة أخرى!",
+  lastOne: "بقي حيوان واحد فقط… من أكل المانجو؟ المسه!",
+  batTitle: "إنه الخفاش!",
+  batText: "قال الخفاش بخجل: «لسنا لصوصًا! وادينا جفّ ولم تعد تنبت فيه ثمار. نحن نطير ليلًا وننثر بذور الأشجار».",
+  batBtn: "هيا نساعد الخفافيش",
+  s3young: "المس الوادي ليطير الخفاش ويُسقط البذور. ازرع ٦ أشجار!",
+  s3old: "الخفاش يطير وحده. المس الشاشة في الوقت المناسب لتسقط البذرة فوق الدائرة!",
+  miss: "قريب! حاول مرة أخرى.",
+  s3done: "نبع الماء وعادت الأشجار! شكرًا يا نوح.",
+  end: "أحسنت يا محقق! حجر الإصغاء حجر عادي، والسحر الحقيقي أنك أصغيت للجميع."
+};
+
+const SUSPECTS = [
+  { id: "elephant", emo: "🐘", name: "فيفي الفيلة" },
+  { id: "giraffe",  emo: "🦒", name: "زيزي الزرافة" },
+  { id: "monkey",   emo: "🐒", name: "كوكو القرد" },
+  { id: "sloth",    emo: "🦥", name: "كسلان" },
+  { id: "bat",      emo: "🦇", name: "الخفاش" }
+];
+const CLUES2 = {
+  young: [
+    { t: "زيزي الزرافة تأكل أوراق الشجر بلسانها، ولا تعضّ الثمار.", out: ["giraffe"] },
+    { t: "فيفي الفيلة كانت تشرب عند النهر، وآثار أقدامها بعيدة عن الشجرة.", out: ["elephant"] },
+    { t: "الثمار بعيدة عن الفروع التي يمسكها كوكو القرد.", out: ["monkey"] },
+    { t: "السارق يطير ليلًا تحت القمر… والكسلان لا يطير!", out: ["sloth"] }
+  ],
+  old: [
+    { t: "لا توجد آثار أقدام تحت الشجرة. استبعد الحيوانات الكبيرة التي تمشي على الأرض.", out: ["elephant", "giraffe"] },
+    { t: "الشعرات التي وجدناها سوداء وقصيرة. من شعره بنّي؟", out: ["monkey", "sloth"] }
+  ]
+};
+
+/* =========================================================
+   SOUND: tiny beeps + Arabic speech (only if an Arabic voice exists)
+   ========================================================= */
+let soundOn = true, actx = null, arVoice = null;
+const pickVoice = () => {
+  if (!("speechSynthesis" in window)) return;
+  const vs = speechSynthesis.getVoices();
+  arVoice = vs.find(v => /^ar[-_]EG/i.test(v.lang)) || vs.find(v => /^ar/i.test(v.lang)) || null;
+};
+if ("speechSynthesis" in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(t) {
+  if (!soundOn || !arVoice) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(t);
+    u.voice = arVoice; u.lang = arVoice.lang; u.rate = 0.9; u.pitch = 1.1;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function tone(freqs, dur = 0.12, type = "sine") {
+  if (!soundOn) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    freqs.forEach((f, i) => {
+      const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + i * dur;
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(0.18, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + dur * 1.6);
+      o.connect(g).connect(actx.destination); o.start(t0); o.stop(t0 + dur * 1.7);
+    });
+  } catch (e) {}
+}
+const sfx = {
+  found: () => tone([660, 880, 1175], 0.09),
+  wrong: () => tone([220, 180], 0.14, "triangle"),
+  out:   () => tone([520, 390], 0.08, "square"),
+  plant: () => tone([392, 587], 0.08),
+  win:   () => tone([523, 659, 784, 1047], 0.13)
+};
+$("#mute").onclick = () => {
+  soundOn = !soundOn; $("#mute").textContent = soundOn ? "🔊" : "🔈";
+  if (!soundOn && "speechSynthesis" in window) speechSynthesis.cancel();
+};
+function say(el, text) { el.textContent = text; speak(text); }
+$$("[data-say]").forEach(g => g.onclick = () => speak(g.querySelector("p").textContent));
+
+/* =========================================================
+   FLOW
+   ========================================================= */
+let level = "young";
+function show(id) {
+  $$(".screen").forEach(s => s.classList.toggle("on", s.id === id));
+  $("#bar").classList.toggle("hidden", id === "start" || id === "end");
+  const n = { s1: 1, s2: 2, s3: 3 }[id] || 0;
+  [1, 2, 3].forEach(i => { const e = $("#st" + i); e.className = i < n ? "done" : i === n ? "now" : ""; });
+}
+$$("[data-level]").forEach(b => b.onclick = () => { level = b.dataset.level; startStage1(); });
+$("#again").onclick = () => startStage1();
+$("#home").onclick = () => show("start");
+
+/* ---------- STAGE 1 ---------- */
+const scene1 = $("#scene1"), dark = $("#dark"), lens = $("#lens");
+let lensX = 0, lensY = 0, lensR = 60, found1 = new Set(), s1Active = false;
+const clueEls = $$("#scene1 .clue");
+function sizeLens() {
+  const r = scene1.getBoundingClientRect();
+  lensR = Math.min(r.width, r.height) * (level === "young" ? 0.2 : 0.13);
+  lens.style.width = lens.style.height = lensR * 2 + "px";
+}
+function drawLens() {
+  lens.style.left = lensX + "px"; lens.style.top = lensY + "px";
+  const m = `radial-gradient(circle ${lensR}px at ${lensX}px ${lensY}px, transparent ${lensR - 6}px, #000 ${lensR}px)`;
+  dark.style.webkitMaskImage = m; dark.style.maskImage = m;
+}
+function checkClues() {
+  const sr = scene1.getBoundingClientRect();
+  clueEls.forEach(c => {
+    const id = c.dataset.id;
+    if (found1.has(id)) return;
+    const r = c.getBoundingClientRect();
+    const cx = r.left + r.width / 2 - sr.left, cy = r.top + r.height / 2 - sr.top;
+    if (Math.hypot(cx - lensX, cy - lensY) < lensR * 0.6) {
+      found1.add(id); c.classList.add("found"); sfx.found();
+      const slot = $(`.slot[data-id="${id}"]`); slot.classList.add("got"); slot.textContent = T.clues[id].short;
+      say($("#g1"), T.clues[id].say);
+      if (found1.size === clueEls.length) finishStage1();
+    }
+  });
+}
+function moveLens(e) {
+  if (!s1Active) return;
+  const r = scene1.getBoundingClientRect();
+  lensX = Math.max(0, Math.min(r.width, e.clientX - r.left));
+  lensY = Math.max(0, Math.min(r.height, e.clientY - r.top));
+  $("#hand").classList.add("hidden");
+  drawLens(); checkClues();
+}
+scene1.addEventListener("pointerdown", e => { scene1.setPointerCapture?.(e.pointerId); moveLens(e); });
+scene1.addEventListener("pointermove", e => { if (e.pointerType === "mouse" || e.buttons || e.pressure) moveLens(e); });
+window.addEventListener("resize", () => { if ($("#s1").classList.contains("on")) { sizeLens(); drawLens(); } });
+
+function startStage1() {
+  show("s1"); s1Active = true; found1.clear();
+  clueEls.forEach(c => c.classList.remove("found"));
+  $("#notebook").innerHTML = clueEls.map(c => `<div class="slot" data-id="${c.dataset.id}">؟</div>`).join("");
+  $("#next1").classList.add("hidden"); $("#notebook").classList.remove("hidden");
+  const hand = $("#hand"); hand.classList.remove("hidden"); hand.style.left = "55%"; hand.style.top = "58%";
+  requestAnimationFrame(() => {
+    const r = scene1.getBoundingClientRect();
+    sizeLens(); lensX = r.width * 0.5; lensY = r.height * 0.55; drawLens();
+  });
+  say($("#g1"), T.s1);
+}
+function finishStage1() {
+  s1Active = false;
+  setTimeout(() => {
+    sfx.win(); say($("#g1"), T.s1done);
+    dark.style.transition = "opacity .8s"; dark.style.opacity = "0.35";
+    $("#notebook").classList.add("hidden"); $("#next1").classList.remove("hidden");
+  }, 900);
+}
+$("#next1 button").onclick = () => { dark.style.opacity = ""; startStage2(); };
+
+/* ---------- STAGE 2 ---------- */
+let clueIdx = 0, outSet = new Set(), s2Lock = false;
+function startStage2() {
+  show("s2"); clueIdx = 0; outSet.clear(); s2Lock = false;
+  $("#suspects").innerHTML = SUSPECTS.map(s =>
+    `<button class="sus" data-id="${s.id}" aria-label="${s.name}"><span class="emo">${s.emo}</span><b>${s.name}</b></button>`).join("");
+  $$(".sus").forEach(b => b.onclick = () => tapSuspect(b));
+  showClue();
+}
+function clues() { return CLUES2[level]; }
+function showClue() {
+  const list = clues();
+  if (clueIdx >= list.length) {
+    $("#clueN").textContent = ""; $("#clueT").textContent = "🦇 ؟";
+    $('.sus[data-id="bat"]').classList.add("last");
+    say($("#g2"), T.lastOne);
+    return;
+  }
+  $("#clueN").textContent = `الدليل ${ar(clueIdx + 1)} من ${ar(list.length)}`;
+  $("#clueT").textContent = list[clueIdx].t;
+  $("#g2").textContent = level === "young" ? T.s2young : T.s2old;
+  speak(list[clueIdx].t + " " + $("#g2").textContent);
+}
+function tapSuspect(b) {
+  const id = b.dataset.id, list = clues();
+  if (s2Lock || outSet.has(id)) return;
+  if (clueIdx >= list.length) { if (id === "bat") revealBat(); return; }
+  const need = list[clueIdx].out;
+  if (need.includes(id)) {
+    outSet.add(id); b.classList.add("out"); sfx.out();
+    if (need.every(x => outSet.has(x))) { s2Lock = true; setTimeout(() => { s2Lock = false; clueIdx++; showClue(); }, 700); }
+  } else {
+    sfx.wrong(); b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
+    say($("#g2"), id === "bat" ? T.wrongBat : T.wrongOther);
+  }
+}
+function revealBat() {
+  sfx.win(); s2Lock = true;
+  openModal("🦇", T.batTitle, T.batText, T.batBtn, startStage3);
+}
+function openModal(emo, title, text, btn, next) {
+  $("#mEmo").textContent = emo; $("#mTitle").textContent = title; $("#mText").textContent = text; $("#mBtn").textContent = btn;
+  $("#modal").classList.remove("hidden"); speak(title + ". " + text);
+  $("#mBtn").onclick = () => { $("#modal").classList.add("hidden"); next(); };
+  setTimeout(() => $("#mBtn").focus(), 50);
+}
+
+/* ---------- STAGE 3 ---------- */
+const scene3 = $("#scene3"), bat = $("#bat");
+const SPOTS = [12, 28, 44, 60, 76, 90];
+let spots = [], batX = 50, planted = 0, patrolRAF = 0, s3Active = false;
+function startStage3() {
+  show("s3"); scene3.classList.remove("alive"); planted = 0; s3Active = true;
+  $$("#scene3 .spot, #scene3 .seed").forEach(e => e.remove());
+  spots = SPOTS.map(x => {
+    const el = document.createElement("div"); el.className = "spot"; el.style.left = x + "%";
+    el.innerHTML = '<span class="tree">🌳</span>'; scene3.appendChild(el);
+    return { x, el, state: "empty" };
+  });
+  updateCounter(); $("#tapHint").classList.remove("hidden");
+  batX = 50; bat.style.left = "50%";
+  if (level === "old") { bat.classList.add("patrol"); startPatrol(); } else bat.classList.remove("patrol");
+  say($("#g3"), level === "young" ? T.s3young : T.s3old);
+}
+function updateCounter() { $("#counter").textContent = `🌳 ${ar(planted)} / ${ar(SPOTS.length)}`; }
+function startPatrol() {
+  cancelAnimationFrame(patrolRAF);
+  const t0 = performance.now();
+  const step = t => {
+    batX = 50 + 40 * Math.sin((t - t0) / 1100);
+    bat.style.left = batX + "%";
+    if (s3Active) patrolRAF = requestAnimationFrame(step);
+  };
+  patrolRAF = requestAnimationFrame(step);
+}
+scene3.addEventListener("pointerdown", e => {
+  if (!s3Active) return;
+  $("#tapHint").classList.add("hidden");
+  const r = scene3.getBoundingClientRect();
+  if (level === "young") {
+    batX = Math.max(8, Math.min(92, (e.clientX - r.left) / r.width * 100));
+    bat.style.left = batX + "%";
+    setTimeout(() => dropSeed(batX), 330);
+  } else dropSeed(batX);
+});
+function dropSeed(x) {
+  const empty = spots.filter(s => s.state === "empty");
+  if (!empty.length) return;
+  const near = empty.reduce((a, b) => Math.abs(b.x - x) < Math.abs(a.x - x) ? b : a);
+  const hit = level === "young" || Math.abs(near.x - x) < 7;
+  if (hit) near.state = "pending";
+  const seed = document.createElement("div"); seed.className = "seed";
+  seed.style.left = x + "%"; seed.style.top = "24%"; scene3.appendChild(seed);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    seed.style.left = (hit ? near.x : x) + "%"; seed.style.top = hit ? "72%" : "80%";
+  }));
+  setTimeout(() => {
+    if (hit) { seed.remove(); plant(near); }
+    else { seed.style.opacity = "0"; sfx.wrong(); say($("#g3"), T.miss); setTimeout(() => seed.remove(), 450); }
+  }, 850);
+}
+function plant(s) {
+  s.state = "planted"; s.el.classList.add("planted"); planted++; sfx.plant(); updateCounter();
+  if (planted === SPOTS.length) {
+    s3Active = false; cancelAnimationFrame(patrolRAF);
+    setTimeout(() => { scene3.classList.add("alive"); sfx.win(); say($("#g3"), T.s3done); }, 500);
+    setTimeout(showEnd, 3400);
+  }
+}
+
+/* ---------- END ---------- */
+function showEnd() {
+  show("end"); speak(T.end);
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    for (let i = 0; i < 18; i++) {
+      const m = document.createElement("div"); m.className = "fall"; m.textContent = i % 3 ? "🥭" : "🌱";
+      m.style.left = Math.random() * 95 + "vw"; m.style.animationDuration = 2.5 + Math.random() * 2.5 + "s";
+      m.style.animationDelay = Math.random() * 1.5 + "s"; document.body.appendChild(m);
+      setTimeout(() => m.remove(), 7000);
+    }
+  }
+}
+})();
+</script>
+</body>
+</html>
